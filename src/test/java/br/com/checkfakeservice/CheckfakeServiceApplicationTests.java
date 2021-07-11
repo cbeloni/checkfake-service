@@ -1,4 +1,4 @@
-package br.com.checkfake;
+package br.com.checkfakeservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
