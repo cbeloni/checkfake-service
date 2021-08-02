@@ -16,7 +16,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.extern.slf4j.Slf4j;
+
 @SpringBootTest
+@Slf4j
 public class MemeControllerTest {
 
 	
@@ -33,7 +36,7 @@ public class MemeControllerTest {
         String serverUrl = "http://localhost:8082/spring-rest/fileserver/singlefileupload/";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
-        System.out.println("Response code: " + response.getStatusCode());
+        log.info("Response code: " + response.getStatusCode());
 	}
 	
 	@Test
@@ -44,12 +47,12 @@ public class MemeControllerTest {
         String serverUrl = "http://localhost:8080/listar";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(serverUrl, String.class);
-        System.out.println("Response code: " + response.getStatusCode());
+        log.info("Response code: " + response.getStatusCode());
 	}
 	
 	public Resource getTestFile() throws IOException {
         Path testFile = Files.createTempFile("test-file", ".txt");
-        System.out.println("Creating and Uploading Test File: " + testFile);
+        log.info("Creating and Uploading Test File: " + testFile);
         Files.write(testFile, "Hello World !!, This is a test file.".getBytes());
         return new FileSystemResource(testFile.toFile());
     }
