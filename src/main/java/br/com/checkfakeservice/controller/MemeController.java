@@ -17,7 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@RestController("/meme")
+@RestController
+@RequestMapping("/meme")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MemeController {
 
