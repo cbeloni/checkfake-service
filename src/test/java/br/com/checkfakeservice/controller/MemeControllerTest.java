@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @Slf4j
-@ActiveProfiles(profiles = "local")
+@ActiveProfiles(profiles = "test")
 public class MemeControllerTest {
 	
 	@Autowired
