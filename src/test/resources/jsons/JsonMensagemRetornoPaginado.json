@@ -1,0 +1,37 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "mensagem": "Corpo da mensagem no twitter",
+      "isFake": true,
+      "nome": "nomeMensagem",
+      "date": null,
+      "url": ""
+    }
+  ],
+  "empty": false,
+  "first": true,
+  "last": true,
+  "number": 0,
+  "numberOfElements": 1,
+  "pageable": {
+    "offset": 0,
+    "pageNumber": 0,
+    "pageSize": 1,
+    "paged": true,
+    "sort": {
+      "empty": false,
+      "sorted": true,
+      "unsorted": false
+    },
+    "unpaged": false
+  },
+  "size": 1,
+  "sort": {
+    "empty": false,
+    "sorted": true,
+    "unsorted": false
+  },
+  "totalElements": 1,
+  "totalPages": 1
+}

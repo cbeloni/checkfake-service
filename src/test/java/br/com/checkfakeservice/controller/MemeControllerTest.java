@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,20 +26,44 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import br.com.checkfakeservice.dto.MemePaginadoDto;
+import br.com.checkfakeservice.entity.Meme;
+import br.com.checkfakeservice.mapper.MemeMapper;
+import br.com.checkfakeservice.repository.MemeRepository;
+import br.com.checkfakeservice.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @Slf4j
 @ActiveProfiles(profiles = "test")
 public class MemeControllerTest {
+		
+	@Autowired
+	private MemeRepository memeRepository;
+		
+	@Autowired
+	private MemeMapper memeMapper;
 	
 	@Autowired
 	private TestRestTemplate restTemplate;
 	
+	private Meme meme = Meme.builder().nome("nomeMeme").isFake(true).imagemNome("nomeImagem").build();
+	
+	private String JsonRetornoPaginadoEsperado;
+	
+	
+	public MemeControllerTest() throws Exception {
+		JsonRetornoPaginadoEsperado = FileUtils.readFileAsString("jsons/JsonMemeRetornoPaginado.json");
+	}
+
+	@BeforeEach 
+	void setUp() {
+		
+	}
+	
 	@Test
-	public void salvaMeme() throws IOException {
-        HttpHeaders headers = new HttpHeaders();
+	void salvaMeme() throws IOException {
+		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -49,28 +74,30 @@ public class MemeControllerTest {
         String serverUrl = "/meme/salvar";
         ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
         log.info("Response code: " + response.getStatusCode());
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);               
 	}
 	
 	@Test
-	public void getMeme() throws IOException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        String serverUrl = "/meme/listarPaginado?pageNo=1&pageSize=1&sortBy=id";
-        ResponseEntity<String> response = restTemplate.getForEntity(serverUrl, String.class);
-        log.info("Response code: " + response.getStatusCode());
+	void getMeme() throws IOException {
+		memeRepository.save(meme);
+		
+        String serverUrl = "/meme/listarPaginado?pageNo=0&pageSize=1&sortBy=id";
+        ResponseEntity<MemePaginadoDto> response = restTemplate.getForEntity(serverUrl, MemePaginadoDto.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        
+        MemePaginadoDto memePaginadoDtoRetornado = response.getBody();
+        MemePaginadoDto memePaginadoDtoEsperado = memeMapper.JsonToMemePaginadoDto(this.JsonRetornoPaginadoEsperado);
+        Assertions.assertThat(memePaginadoDtoRetornado).isEqualTo(memePaginadoDtoEsperado);
 	}
 	
-	public Resource getTestFile() throws IOException {
+	private Resource getTestFile() throws IOException {
         Path testFile = Files.createTempFile("test-file", ".txt");
         log.info("Creating and Uploading Test File: " + testFile);
         Files.write(testFile, "Hello World !!, This is a test file.".getBytes());
         return new FileSystemResource(testFile.toFile());
     }
 	
-	public String postFile(String filename, byte[] someByteArray, String serverUrl) {
+	private String postFile(String filename, byte[] someByteArray, String serverUrl) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
