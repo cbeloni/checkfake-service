@@ -3,9 +3,8 @@ package br.com.checkfakeservice.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import br.com.checkfakeservice.entity.Meme;
+import br.com.checkfakeservice.entity.Mensagem;
 
-public interface MemeRepository extends JpaRepository<Meme,Long>, PagingAndSortingRepository<Meme, Long> {
-  
+public interface MensagemRepository extends JpaRepository<Mensagem, Long>, PagingAndSortingRepository<Mensagem, Long> {
 
 }
